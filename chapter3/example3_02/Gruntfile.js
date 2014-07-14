@@ -1,9 +1,6 @@
-var fs = require('fs');
 module.exports = function(grunt) {
     // Define the default task
-    grunt.registerTask('log-deploy', function () {
-        var message = 'Deployment on ' + new Date();
-        fs.appendFileSync('deploy.log', message + '\n')
-        grunt.log.writeln('Appended "' + message + '"');
+    grunt.registerTask('foo', function () {
+        grunt.log.writeln('My task "%s" has arguments %j', this.name, this.args);
     });
 };

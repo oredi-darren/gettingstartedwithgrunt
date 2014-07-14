@@ -1,31 +1,18 @@
+var request = require('request');
+var url = 'https://raw.githubusercontent.com/oredi/gettingstartedwithgrunt/master/README.md';
 module.exports = function(grunt) {
-    grunt.initConfig({
-        copy: {
-            files12: {
-                files: {
-                    'dest/file1.txt': 'src/file1.txt',
-                    'dest/file2.txt': 'src/file2.txt'
-                }
-            },
-            files34: {
-                files: {
-                    'dest/file3.txt': 'src/file3.txt',
-                    'dest/file4.txt': 'src/file4.txt'
-                }
-            }
-        }
-    });
-
-    grunt.registerMultiTask('copy', function () {
-        var count = 0;
-        this.files.forEach(function (file) {
-            try {
-                grunt.file.copy(file.src, file.dest);
-                count++;
-            } catch(ex) {
-                grunt.fail.fatal(JSON.stringify(file) + ' not found.');
+    grunt.registerTask('webget', function () {
+        var done = this.async();
+        request(url, function (err, response, contents) {
+            if(err) {
+                done(err);
+            } else if(response.statusCode !== 200) {
+                done(new Error('Not OK'));
+            } else {
+                grunt.file.write('FILE.md', contents);
+                grunt.log.ok('FILE.md successfully created');
+                done();
             }
         });
-        grunt.log.writeln('Copied %d/%d files', count, this.files.length);
     });
 };
